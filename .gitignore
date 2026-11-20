@@ -16,3 +16,6 @@ venv/
 # 涓存椂鏂囦欢
 .tmp/
 *.log
+
+# 生成的报告，每次运行都会变
+report.json

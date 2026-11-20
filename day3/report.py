@@ -148,6 +148,7 @@ def print_report(report: dict) -> None:
     print("状态分布：")
     for state, count in (report.get("状态统计") or {}).items():
         print(f"    {state}：{count} 台")
+    print("【本报告由程序自动生成】")
     print("=" * 40)
 
 

@@ -1,84 +1,22 @@
-"""Day 3 实战（简化版）：读设备巡检 CSV → 清洗 → 生成 JSON 报告
+"""Day 3 实战：读设备巡检 CSV → 清洗 → 生成 JSON 报告
 
 运行：
     python report.py
+    python day3/report.py      # 从仓库根也行
 
-我已经写好了三块：
-    - to_number      数字转换
-    - clean_rows     清洗（去单位、空值、异常值、重复行）
-    - save_json      写文件
-    - print_report   打印
-
-留给你写的只有 build_report 里的 **三个统计**：
-    1. 设备总数
-    2. 状态统计
-    3. 功率总计
-
-一共不到 15 行代码。不着急，慢慢来。
+分工：
+    csv_loader.py   读 CSV、数字转换、清洗
+    report.py       统计、输出、自检
 """
 
-import csv
 import json
+from pathlib import Path
 
-CSV_PATH = "devices.csv"
-JSON_PATH = "report.json"
+from csv_loader import clean_rows, load_rows
 
-
-def to_number(value):
-    """把 "7.5"、"22kW"、7.5、"" 统一转成 float 或 None。"""
-    if value is None:
-        return None
-    if isinstance(value, (int, float)):
-        return float(value)
-    text = str(value).strip().replace("kW", "").replace("KW", "")
-    if not text:
-        return None
-    try:
-        return float(text)
-    except ValueError:
-        return None
-
-
-def clean_rows(rows: list) -> list:
-    """清洗原始行（已写好，不用改）。
-
-    做四件事：
-        - 功率/电流/温度转成数字，空值变 None
-        - 温度大于 200 视为传感器故障，变 None
-        - 名称空的填 "未命名"
-        - 五项完全相同的重复行只保留第一条
-    """
-    cleaned = []
-    seen = set()
-
-    for item in rows:
-        power = to_number(item["功率"])
-        current = to_number(item["电流"])
-        temp = to_number(item["温度"])
-
-        if temp is not None and temp > 200:
-            temp = None
-
-        name = item["名称"].strip()
-        if not name:
-            name = "未命名"
-
-        fingerprint = (name, item["类型"], power, current, temp)
-        if fingerprint in seen:
-            continue
-        seen.add(fingerprint)
-
-        cleaned.append({
-            "设备编号": item["设备编号"],
-            "名称": name,
-            "类型": item["类型"],
-            "功率": power,
-            "电流": current,
-            "温度": temp,
-            "状态": item["状态"].strip(),
-        })
-
-    return cleaned
+BASE = Path(__file__).resolve().parent
+CSV_PATH = BASE / "devices.csv"
+JSON_PATH = BASE / "report.json"
 
 
 def build_report(devices: list) -> dict:
@@ -189,8 +127,7 @@ def _check(report: dict) -> None:
 
 
 if __name__ == "__main__":
-    with open(CSV_PATH, encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+    rows = load_rows(CSV_PATH)
     print(f"读到 {len(rows)} 行原始数据")
 
     devices = clean_rows(rows)

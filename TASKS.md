@@ -10,7 +10,8 @@
 - [x] D3 文件 IO 与 JSON 深入
 - [x] D4 Git 进阶与代码组织（本地完成；GitHub push 被网络卡住，待恢复后补）
 - [x] D5 大模型能力边界
-- [ ] **D6 第一个 API 程序 ← 现在在这里**
+- [x] D6 第一个 API 程序（50 条批量 0 失败，0.00046 元/条）
+- [ ] **D7 缓冲日 ← 现在在这里**
 
 ## 每次开工先跑这两条
 
@@ -120,6 +121,42 @@ print(ask_json(text))
 
 - [ ] `git add day6/` + `git commit -m "Day 6: 封装 LLM 客户端 + 结构化/流式/批量"`
 - [ ] 把上面的勾选状态更新一遍
+
+---
+
+# D7 · 缓冲日（2 小时够了，不用凑满 4 小时）
+
+## 1. 补 GitHub（优先级最高）
+
+- [ ] `git push origin main` —— 本地领先 4 个提交，远程还停在 `c7f0ded`
+- [ ] 确认成功：`git ls-remote --heads origin` 能看到 `a9f396b`
+- [ ] 走一次真实 PR：
+
+```powershell
+git switch -c feature/day7-readme
+# 改 README，加一句话
+git add README.md ; git commit -m "Day 7: README 记录模块分工"
+git push -u origin feature/day7-readme
+# 网页上 Compare & pull request → Merge pull request
+git switch main ; git pull ; git branch -d feature/day7-readme
+git push origin --delete feature/day7-readme
+```
+
+**如果 push 还是失败**（curl 52 / 连接重置）：试 `git config --global http.version HTTP/1.1`，再不行就等网络好的时段，别耗超过 30 分钟。
+
+## 2. 建三个信息源
+
+- [ ] GitHub Trending（每周看一次别人在做什么）
+- [ ] HuggingFace（每周看一次新模型）
+- [ ] 一个 AI 周报（DeepSeek 官方公告 / 机器之心，二选一）
+
+## 3. 三个复盘问题（口头答一遍，不用写下来）
+
+- [ ] 环境熟了吗？现在能不能不查教程，自己新建项目 + 调通 API？
+- [ ] Python 还卡在哪几处？（具体到语法点，别说“感觉还行”）
+- [ ] 大模型什么时候好用、什么时候不该用？（用 D5 那四条边界回答）
+
+**D7 验收**：GitHub 上能看到 D6 的提交 + 一个已合并的 PR。
 
 ---
 

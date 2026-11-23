@@ -19,3 +19,5 @@ venv/
 
 # 生成的报告，每次运行都会变
 report.json
+
+day6/batch_result.csv
